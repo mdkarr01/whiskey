@@ -3,9 +3,9 @@ const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
 const cloudinary = require('cloudinary');
 cloudinary.config({
-	cloud_name: 'devsprout',
-	api_key: '111963319915549',
-	api_secret: process.env.CLOUDINARY_SECRET
+	cloud_name: 'michael-karr',
+	api_key: process.env.CLOUDINARY_API_KEY,
+	api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 module.exports = {
@@ -112,7 +112,7 @@ module.exports = {
 		post.description = req.body.post.description;
 		post.price = req.body.post.price;
 		// save the updated post into the db
-		post.save();
+		await post.save();
 		// redirect to show page
 		res.redirect(`/posts/${post.id}`);
 	},

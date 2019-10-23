@@ -12,8 +12,9 @@ const User = require('./models/user');
 const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
-// const seedPosts = require('./seeds');
-// seedPosts();
+const chalk = require('chalk');
+const seedPosts = require('./seeds');
+seedPosts();
 
 // require routes
 const index 	= require('./routes/index');
@@ -23,12 +24,14 @@ const reviews = require('./routes/reviews');
 const app = express();
 
 // connect to the database
-mongoose.connect('mongodb://localhost:27017/surf-shop', { useNewUrlParser: true });
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true
+});
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log('we\'re connected!');
+  console.log(chalk.white.bold.bgRed('Connected to MLab!'));
 });
 
 // use ejs-locals for all ejs templates:
@@ -40,7 +43,7 @@ app.set('view engine', 'ejs');
 app.use(express.static('public'));
 
 // uncomment after placing your favicon in /public
-//app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -64,12 +67,13 @@ passport.deserializeUser(User.deserializeUser());
 
 // set local variables middleware
 app.use(function(req, res, next) {
+  //set up a default user who is always logged in (TESTING PURPOSES ONLY)
   req.user = {
-    // '_id' : '5bb27cd1f986d278582aa58c',
-    // '_id' : '5bc521c0b142b6d7f7523406',
-    '_id' : '5bfed10ad176f845e38aec92',
-    'username' : 'ian3'
-  }
+    // _id: '5d28e34e2b9bd21f167df772',
+    _id: '5d2a30a2f2d357030dcebbcc',
+    username: 'mdkarr'
+  };
+  //=====================================================================
   res.locals.currentUser = req.user;
   // set default page title
   res.locals.title = 'Surf Shop';

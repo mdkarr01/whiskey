@@ -1,7 +1,7 @@
-const mapBoxToken = process.env.MAPBOX_TOKEN;
 const Post = require('../models/post');
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
-const geocodingClient = mbxGeocoding({ accessToken: process.env.MAPBOX_TOKEN });
+const mapBoxToken = process.env.MAPBOX_TOKEN;
+const geocodingClient = mbxGeocoding({ accessToken: mapBoxToken });
 const cloudinary = require('cloudinary');
 cloudinary.config({
   cloud_name: 'michael-karr',
@@ -23,7 +23,7 @@ module.exports = {
     res.render('posts/index', {
       posts,
       mapBoxToken,
-      title: 'Posts Index'
+      title: 'Whiskey Outlet'
     });
   },
   // Posts New
@@ -46,7 +46,7 @@ module.exports = {
         limit: 1
       })
       .send();
-    req.body.post.coordinates = response.body.features[0].geometry.coordinates;
+    req.body.post.geometry = response.body.features[0].geometry;
     let post = await Post.create(req.body.post);
     req.session.success = 'Post created successfully!';
     res.redirect(`/posts/${post.id}`);
@@ -62,8 +62,6 @@ module.exports = {
       }
     });
     const floorRating = post.calculateAvgRating();
-    // the following line is not covered in a lecture
-    let mapBoxToken = process.env.MAPBOX_TOKEN;
     res.render('posts/show', { post, mapBoxToken, floorRating });
   },
   // Posts Edit

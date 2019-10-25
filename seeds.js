@@ -28,7 +28,7 @@ async function seedPosts() {
       0,
       20
     )}...</p>`;
-    post.save();
+    await post.save();
   }
   console.log('600 new posts created');
 }

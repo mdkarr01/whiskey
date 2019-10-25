@@ -17,8 +17,8 @@ const seedPosts = require('./seeds');
 seedPosts();
 
 // require routes
-const index 	= require('./routes/index');
-const posts 	= require('./routes/posts');
+const index = require('./routes/index');
+const posts = require('./routes/posts');
 const reviews = require('./routes/reviews');
 
 const app = express();
@@ -31,7 +31,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', () => {
-  console.log(chalk.white.bold.bgRed('Connected to MLab!'));
+  console.log(chalk.white.bold.bgRed('Connected to MLab on Port 3000!!'));
 });
 
 // use ejs-locals for all ejs templates:
@@ -52,11 +52,13 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(methodOverride('_method'));
 
 // Configure Passport and Sessions
-app.use(session({
-  secret: 'hang ten dude!',
-  resave: false,
-  saveUninitialized: true
-}));
+app.use(
+  session({
+    secret: 'hang ten dude!',
+    resave: false,
+    saveUninitialized: true
+  })
+);
 
 app.use(passport.initialize());
 app.use(passport.session());
@@ -76,7 +78,7 @@ app.use(function(req, res, next) {
   //=====================================================================
   res.locals.currentUser = req.user;
   // set default page title
-  res.locals.title = 'Surf Shop';
+  res.locals.title = 'Whiskey Outlet';
   // set success flash message
   res.locals.success = req.session.success || '';
   delete req.session.success;

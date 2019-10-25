@@ -11,7 +11,7 @@ module.exports = {
     // find all posts to populate into map
     const posts = await Post.find({});
     // render home page and pass in posts
-    res.render('index', { posts, mapBoxToken, title: 'Surf Shop - Home' });
+    res.render('index', { posts, mapBoxToken, title: 'Whiskey Tapped - Home' });
   },
   // POST /register
   async postRegister(req, res, next) {
@@ -33,6 +33,15 @@ module.exports = {
   },
   // GET /logout
   getLogout(req, res, next) {
+    var sess = req.session.user;
+    if (sess) {
+      req.session.user = null;
+      return callback(null, {
+        success: true,
+        message: 'user logout successfully'
+      });
+    }
+    callback(null, { success: true, message: 'user logout successfully' });
     req.logout();
     res.redirect('/');
   }

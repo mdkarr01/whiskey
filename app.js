@@ -13,8 +13,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const methodOverride = require('method-override');
 const chalk = require('chalk');
-const seedPosts = require('./seeds');
-seedPosts();
+// const seedPosts = require('./seeds');
+// seedPosts();
 
 // require routes
 const index = require('./routes/index');

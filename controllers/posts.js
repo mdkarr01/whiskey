@@ -47,7 +47,14 @@ module.exports = {
       })
       .send();
     req.body.post.geometry = response.body.features[0].geometry;
-    let post = await Post.create(req.body.post);
+    let post = new Post(req.body.post);
+    post.properties.description = `<strong><a href="/posts/${post._id}">${
+      post.title
+    }</a></strong><p>${post.location}</p><p>${post.description.substring(
+      0,
+      20
+    )}...</p>`;
+    await post.save();
     req.session.success = 'Post created successfully!';
     res.redirect(`/posts/${post.id}`);
   },
@@ -110,13 +117,19 @@ module.exports = {
           limit: 1
         })
         .send();
-      post.coordinates = response.body.features[0].geometry.coordinates;
+      post.geometry = response.body.features[0].geometry;
       post.location = req.body.post.location;
     }
     // update the post with any new properties
     post.title = req.body.post.title;
     post.description = req.body.post.description;
     post.price = req.body.post.price;
+    post.properties.description = `<strong><a href="/posts/${post._id}">${
+      post.title
+    }</a></strong><p>${post.location}</p><p>${post.description.substring(
+      0,
+      20
+    )}...</p>`;
     // save the updated post into the db
     await post.save();
     // redirect to show page
